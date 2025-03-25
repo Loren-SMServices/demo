@@ -4,7 +4,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * Controller lo usaremos para movernos entre vistas (HTML, JSP...) 
@@ -47,9 +46,10 @@ public class Controlador {
 	 * @return
 	 */
 	@PostMapping("/procesarFormulario")
-    public String procesarFormulario(@RequestParam String dato, Model model) {
+    public String procesarFormulario(String user,String password, Model model) {
         // Añadir el dato recibido al modelo
-        model.addAttribute("dato", dato);
+        model.addAttribute("user", user);
+        model.addAttribute("password", password);
         return "index"; // Redirige de vuelta a la vista "formulario.jsp"
     }
 
