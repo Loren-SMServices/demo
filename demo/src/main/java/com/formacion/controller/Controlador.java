@@ -1,5 +1,7 @@
 package com.formacion.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -63,13 +65,21 @@ public class Controlador {
 		log.info("Procesamos el formulario");
 		log.info(user);
 		log.info(password);
+		String mensaje = null;
 		User usuario =  new User();
 		usuario.setUsername(user);
 		usuario.setPassword(password);
-		userService.saveUser(usuario);
+		List<User> lista = userService.findAllUsers();
+		for (User usu : lista) {
+			if(!usu.getUsername().equalsIgnoreCase(usuario.getUsername())) {
+				userService.saveUser(usuario);
+				mensaje = "El usuario " + usuario.getUsername() + " ha sido creado";
+			}
+		}
         // Añadir el dato recibido al modelo
         model.addAttribute("user", user);
         model.addAttribute("password", password);
+        model.addAttribute("mensaje", mensaje==null?"El usuario" + usuario.getUsername() + " ya esta registrado":mensaje);
         return "index"; // Redirige de vuelta a la vista "formulario.jsp"
     }
 

@@ -1,5 +1,7 @@
 package com.formacion.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.formacion.entities.User;
@@ -20,5 +22,9 @@ public class UserService {
 
     public User saveUser(User user) {
         return userRepository.save(user);
+    }
+    
+    public List<User> findAllUsers() {
+        return userRepository.findAll();
     }
 }

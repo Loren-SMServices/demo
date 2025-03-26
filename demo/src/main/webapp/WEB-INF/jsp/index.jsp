@@ -48,6 +48,7 @@
     <h2>Usuario enviado:</h2>
     <p><c:out value="${user}" /></p> <!-- Mostrar el valor con JSTL -->
     <p><c:out value="${password}" /></p>
+    <p style="background-color: orange"><c:out value="${mensaje}" /></p>
 	
 </body>
 </html>
