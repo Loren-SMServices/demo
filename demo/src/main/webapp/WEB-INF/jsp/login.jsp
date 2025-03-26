@@ -19,7 +19,7 @@
 </head>
 <body>
 	<div style="padding: 2% 0 0 2%">
-		<form class="row g-3" action="/formularioRegistro" method="post">
+		<form class="row g-3" action="/formularioLogin" method="post">
 		  <div class="col-md-5">
 		    <label for="user" class="form-label">Email</label>
 		    <input type="email" class="form-control w-100" id="user" name="user" required>
@@ -29,12 +29,12 @@
 		    <input type="password" class="form-control w-100" id="password" name="password" required>
 		  </div>
 		  <div class="col-12">
-		    <button type="submit" class="btn btn-primary">Registrar</button>
+		    <button type="submit" class="btn btn-primary">Login</button>
 		  </div>
 		</form>
-	
+		
 		<div class="mt-3">
-	       	<p>¿Ya tienes una cuenta? <a href="/loginRegistro?source=registro">Inicia sesión aquí</a></p>
+	       	<p><a href="/loginRegistro?source=login">Registrate</a></p>
 	    </div>
     </div>
     
