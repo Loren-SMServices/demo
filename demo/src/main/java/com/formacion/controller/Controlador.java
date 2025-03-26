@@ -1,16 +1,27 @@
 package com.formacion.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import com.formacion.entities.User;
+import com.formacion.service.UserService;
+
+import lombok.extern.java.Log;
 
 /**
  * Controller lo usaremos para movernos entre vistas (HTML, JSP...) 
  * 
  */
 @Controller
+@Log
 public class Controlador {
+	
+	@Autowired
+    private UserService userService;
+
 	
 	/**
 	 * Solicitud GET, en este caso sera nuestra ruta raiz (localhost:8080/)
@@ -20,6 +31,7 @@ public class Controlador {
 	 */
 	@GetMapping("/")
 	public String inicio(Model model) {
+		log.info("Arranca la app");
 		//model se encarga de mandar los datos en formato clave valor
 		model.addAttribute("texto", "Texto de ejemplo");
 		//Devolvemos el nombre de la vista
@@ -34,6 +46,7 @@ public class Controlador {
 	 */
 	@GetMapping("/index")
 	public String inicioDesdeIndex(Model model) {
+		log.info("Llamamos a index");
 		model.addAttribute("texto", "Mas tarde habra que encargarse de capar esto");
 		//Devolvemos el nombre de la vista 
 		return "index";
@@ -47,6 +60,13 @@ public class Controlador {
 	 */
 	@PostMapping("/procesarFormulario")
     public String procesarFormulario(String user,String password, Model model) {
+		log.info("Procesamos el formulario");
+		log.info(user);
+		log.info(password);
+		User usuario =  new User();
+		usuario.setUsername(user);
+		usuario.setPassword(password);
+		userService.saveUser(usuario);
         // Añadir el dato recibido al modelo
         model.addAttribute("user", user);
         model.addAttribute("password", password);
