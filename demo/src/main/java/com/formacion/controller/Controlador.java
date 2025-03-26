@@ -60,28 +60,64 @@ public class Controlador {
 	 * @param model
 	 * @return
 	 */
-	@PostMapping("/procesarFormulario")
-    public String procesarFormulario(String user,String password, Model model) {
-		log.info("Procesamos el formulario");
+	@PostMapping("/formularioRegistro")
+    public String procesarFormularioRegistro(String user,String password, Model model) {
+		log.info("Procesamos el formulario de Registro");
 		log.info(user);
 		log.info(password);
 		String mensaje = null;
+		boolean existe = false;
 		User usuario =  new User();
 		usuario.setUsername(user);
 		usuario.setPassword(password);
 		List<User> lista = userService.findAllUsers();
+		log.info("Hay " + userService.countUsers() + " usuarios registrados");
+		
 		for (User usu : lista) {
-			if(!usu.getUsername().equalsIgnoreCase(usuario.getUsername())) {
-				userService.saveUser(usuario);
-				mensaje = "El usuario " + usuario.getUsername() + " ha sido creado";
+			if(usu.getUsername().equalsIgnoreCase(usuario.getUsername())) {
+				existe = true;
+				break;	
 			}
 		}
+		
+		if(!existe) {
+			userService.saveUser(usuario);
+			mensaje = "El usuario " + usuario.getUsername() + " ha sido creado";
+		}
+		
         // Añadir el dato recibido al modelo
         model.addAttribute("user", user);
         model.addAttribute("password", password);
-        model.addAttribute("mensaje", mensaje==null?"El usuario" + usuario.getUsername() + " ya esta registrado":mensaje);
+        model.addAttribute("mensaje", mensaje==null?"El usuario " + usuario.getUsername() + " ya esta registrado":mensaje);
         return "index"; // Redirige de vuelta a la vista "formulario.jsp"
     }
-
-
+	
+	@PostMapping("/formularioLogin")
+    public String procesarFormularioLogin(String user,String password, Model model) {
+		log.info("Procesamos el formulario de Login");
+		log.info(user);
+		log.info(password);
+		boolean exito = false;
+		String mensaje = null;
+		User usuario =  new User();
+		usuario.setUsername(user);
+		usuario.setPassword(password);
+		String contraseñaHasheada = userService.findUserByUsername(usuario.getUsername()).getPassword();
+		if(userService.verifyPassword(password, contraseñaHasheada)) {
+			exito = true;
+			log.info("Usuario correcto");
+			mensaje = "Usuario " + usuario.getUsername() + " con Pass " + usuario.getPassword() + " logado con exito";
+		}else {
+			mensaje = "Error en usuario o contraseña";
+		}
+		
+        // Añadir el dato recibido al modelo
+        model.addAttribute("mensaje", mensaje==null?"El usuario" + usuario.getUsername() + " ya esta registrado":mensaje);
+        return exito?"principal":"login"; // Redirige de vuelta a la vista "formulario.jsp"
+    }
+	
+	@GetMapping("/loginRegistro")
+    public String procesarFormularioLogin(String source) {
+		return source.equalsIgnoreCase("registro")?"login":"index";
+    }
 }
