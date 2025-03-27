@@ -111,6 +111,9 @@ public class Controlador {
 			mensaje = "Error en usuario o contraseña";
 		}
 		
+		if(exito) {
+			return "redirect:/api-data";
+		}
         // Añadir el dato recibido al modelo
         model.addAttribute("mensaje", mensaje==null?"El usuario" + usuario.getUsername() + " ya esta registrado":mensaje);
         return exito?"principal":"login"; // Redirige de vuelta a la vista "formulario.jsp"
