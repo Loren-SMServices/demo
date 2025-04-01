@@ -1,7 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
  <%@ taglib prefix="c" uri="jakarta.tags.core" %> <!-- Importar JSTL es usado actualmente -->
-    
+ <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+ 
 <!-- <%//String texto = (String) request.getAttribute("texto");%>  Forma antigua habia que recoger los datos
 																   desde request y almacenarlo en una variable -->
 <!DOCTYPE html>
@@ -19,16 +20,18 @@
 </head>
 <body>
 	<h2>Pagina principal</h2>
+	
 	<div style="padding: 2% 0 0 2%">
 	    <!-- Muestra los datos obtenidos de la API -->
 	    <p><c:out value="${apiData}"/></p>
 	</div>
+	<form action="/logout" method="post">
+	    <button type="submit" class="btn btn-danger">Cerrar sesión</button>
+	</form>
 </body>
 </html>
 
-	<div class="mt-3">
-       	<p><a href="/loginRegistro?source=login">logout</a></p>
-    </div>
+	
     
 </body>
 </html>

@@ -19,7 +19,7 @@
 </head>
 <body>
 	<div style="padding: 2% 0 0 2%">
-		<form class="row g-3" action="/formularioRegistro" method="post">
+		<form class="row g-3" action="/anonimo/formularioRegistro" method="post">
 		  <div class="col-md-5">
 		    <label for="user" class="form-label">Email</label>
 		    <input type="email" class="form-control w-100" id="user" name="user" required>
@@ -34,7 +34,7 @@
 		</form>
 	
 		<div class="mt-3">
-	       	<p>¿Ya tienes una cuenta? <a href="/loginRegistro?source=registro">Inicia sesión aquí</a></p>
+	       	<p>¿Ya tienes una cuenta? <a href="/anonimo/loginRegistro?source=registro">Inicia sesión aquí</a></p>
 	    </div>
     </div>
     
