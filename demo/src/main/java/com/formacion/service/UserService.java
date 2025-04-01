@@ -2,6 +2,9 @@ package com.formacion.service;
 
 import java.util.List;
 
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -9,7 +12,7 @@ import com.formacion.entities.User;
 import com.formacion.repository.UserRepository;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
@@ -23,9 +26,17 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
+    /**
+     * Gaurda el usuario con el rol de Usuario por defecto
+     * @param user
+     * @return
+     */
     public User saveUser(User user) {
-    	// Codificar la contraseña antes de guardar
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        // Asignar un rol por defecto si no se proporciona
+        if (user.getRole() == null || user.getRole().isEmpty()) {
+            user.setRole("USER"); // Rol predeterminado
+        }
         return userRepository.save(user);
     }
     
@@ -37,7 +48,12 @@ public class UserService {
         return userRepository.count();
     }
     
- // Nuevo método para verificar credenciales
+    /**
+     * Verifica que la contraseña del formulario coincide con la hasheada
+     * @param username
+     * @param rawPassword
+     * @return
+     */
     public boolean verifyUserCredentials(String username, String rawPassword) {
         User user = userRepository.findByUsername(username);
         if (user != null) {
@@ -50,6 +66,20 @@ public class UserService {
     public boolean verifyPassword(String rawPassword, String encodedPassword) {
         return passwordEncoder.matches(rawPassword, encodedPassword);
     }
+
+    /**
+     * Este metodo viene implicito de UserDetailsService
+     * Spring Security lo usa internamente para gestionar usuarios y permisos 
+     */
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("Usuario no encontrado: " + username);
+        }
+        return user;
+
+	}
 
     
 }
