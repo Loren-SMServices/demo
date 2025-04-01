@@ -21,10 +21,33 @@
 <body>
 	<h2>Pagina principal</h2>
 	
-	<div style="padding: 2% 0 0 2%">
-	    <!-- Muestra los datos obtenidos de la API -->
-	    <p><c:out value="${apiData}"/></p>
-	</div>
+	<table class="table table-bordered table-striped table-hover" style="text-align: center; margin: 2%; width:96%">
+  		<thead>
+  			<tr>
+  				<th scope="col">#</th>
+  				<th scope="col">Nombre</th>
+  				<th scope="col">Apellido</th>
+  				<th scope="col">Imagen</th>
+  			</tr>
+  		</thead>
+		<tbody>
+        <c:forEach var="usuario" items="${lista}">
+            <tr>
+                <td>${usuario.id}</td>
+                <td>${usuario.firstName}</td>
+                <td>${usuario.lastName}</td>
+                <td><img src="${usuario.image}" style="width: 3%"></td>
+            </tr>
+        </c:forEach>
+    </tbody>
+</table>
+
+	</table>
+	
+<!-- 	<div style="padding: 2% 0 0 2%"> -->
+<!-- 	    Muestra los datos obtenidos de la API -->
+<%-- 	    <p><c:out value="${apiData}"/></p> --%>
+<!-- 	</div> -->
 	<form action="/logout" method="post">
 	    <button type="submit" class="btn btn-danger">Cerrar sesión</button>
 	</form>
