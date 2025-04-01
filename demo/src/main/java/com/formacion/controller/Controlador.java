@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.formacion.entities.User;
 import com.formacion.service.UserService;
@@ -19,6 +20,7 @@ import lombok.extern.java.Log;
  */
 @Controller
 @Log
+@RequestMapping("/anonimo") //Extension para comunicarnos con este controlador (Más facil de controlar)
 public class Controlador {
 	
 	@Autowired
@@ -63,8 +65,8 @@ public class Controlador {
 	@PostMapping("/formularioRegistro")
     public String procesarFormularioRegistro(String user,String password, Model model) {
 		log.info("Procesamos el formulario de Registro");
-		log.info(user);
-		log.info(password);
+		log.info("Usuario " + user);
+		log.info("Password " + password);
 		String mensaje = null;
 		boolean existe = false;
 		User usuario =  new User();
@@ -92,35 +94,56 @@ public class Controlador {
         return "index"; // Redirige de vuelta a la vista "formulario.jsp"
     }
 	
+	/**
+	 * Hemos simplificado su uso, Spring security hara la gestion
+	 * @param model
+	 * @param error
+	 * @param logout
+	 * @return
+	 */
 	@PostMapping("/formularioLogin")
-    public String procesarFormularioLogin(String user,String password, Model model) {
-		log.info("Procesamos el formulario de Login");
-		log.info(user);
-		log.info(password);
-		boolean exito = false;
-		String mensaje = null;
-		User usuario =  new User();
-		usuario.setUsername(user);
-		usuario.setPassword(password);
-		String contraseñaHasheada = userService.findUserByUsername(usuario.getUsername()).getPassword();
-		if(userService.verifyPassword(password, contraseñaHasheada)) {
-			exito = true;
-			log.info("Usuario correcto");
-			mensaje = "Usuario " + usuario.getUsername() + " con Pass " + usuario.getPassword() + " logado con exito";
-		}else {
-			mensaje = "Error en usuario o contraseña";
-		}
-		
-		if(exito) {
-			return "redirect:/api-data";
-		}
-        // Añadir el dato recibido al modelo
-        model.addAttribute("mensaje", mensaje==null?"El usuario" + usuario.getUsername() + " ya esta registrado":mensaje);
-        return exito?"principal":"login"; // Redirige de vuelta a la vista "formulario.jsp"
+	public String procesarFormularioLogin(Model model, String error, String logout) {
+	    log.info("Procesamos el formulario de Login con Spring Security");
+	    
+	    if (error != null) {
+	        model.addAttribute("mensaje", "Usuario o contraseña incorrectos");
+	        log.info("Error en autenticación.");
+	    }
+	    if (logout != null) {
+	        model.addAttribute("mensaje", "Sesión cerrada exitosamente.");
+	        log.info("Usuario ha cerrado sesión.");
+	    }
+	    
+	    return "login"; // Retorna la vista de login.jsp
+	}
+
+	/**
+	 * Switch de vistas de Registo - Login
+	 * @param source
+	 * @return
+	 */
+	@GetMapping("/loginRegistro")
+    public String switchFormulario(String source) {
+		log.info("Cambio a formulario de " + source);
+		return source.equalsIgnoreCase("registro")?"login":"index";
     }
 	
-	@GetMapping("/loginRegistro")
-    public String procesarFormularioLogin(String source) {
-		return source.equalsIgnoreCase("registro")?"login":"index";
+	/**
+	 * Control el caso de error al logar (Spring security)
+	 * @param model
+	 * @param error
+	 * @param logout
+	 * @return
+	 */
+	@GetMapping("/login")
+    public String loginPage(Model model, String error, String logout) {
+		log.info("Login error:" + error + " Logout: " + logout);
+        if (error != null) {
+            model.addAttribute("mensaje", "Usuario o contraseña incorrectos");
+        }
+        if (logout != null) {
+            model.addAttribute("mensaje", "Has cerrado sesión exitosamente");
+        }
+        return "login"; // Retorna la vista login.jsp
     }
 }
