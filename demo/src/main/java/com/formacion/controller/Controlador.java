@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.formacion.entities.User;
+import com.formacion.entities.Usuario;
 import com.formacion.service.UserService;
 
 import lombok.extern.java.Log;
@@ -69,13 +69,13 @@ public class Controlador {
 		log.info("Password " + password);
 		String mensaje = null;
 		boolean existe = false;
-		User usuario =  new User();
+		Usuario usuario =  new Usuario();
 		usuario.setUsername(user);
 		usuario.setPassword(password);
-		List<User> lista = userService.findAllUsers();
+		List<Usuario> lista = userService.findAllUsers();
 		log.info("Hay " + userService.countUsers() + " usuarios registrados");
 		
-		for (User usu : lista) {
+		for (Usuario usu : lista) {
 			if(usu.getUsername().equalsIgnoreCase(usuario.getUsername())) {
 				existe = true;
 				break;	

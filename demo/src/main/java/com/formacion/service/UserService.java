@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.formacion.entities.User;
+import com.formacion.entities.Usuario;
 import com.formacion.repository.UserRepository;
 
 @Service
@@ -22,7 +22,7 @@ public class UserService implements UserDetailsService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User findUserByUsername(String username) {
+    public Usuario findUserByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
@@ -31,7 +31,7 @@ public class UserService implements UserDetailsService {
      * @param user
      * @return
      */
-    public User saveUser(User user) {
+    public Usuario saveUser(Usuario user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         // Asignar un rol por defecto si no se proporciona
         if (user.getRole() == null || user.getRole().isEmpty()) {
@@ -40,7 +40,7 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
     
-    public List<User> findAllUsers() {
+    public List<Usuario> findAllUsers() {
         return userRepository.findAll();
     }
     
@@ -55,7 +55,7 @@ public class UserService implements UserDetailsService {
      * @return
      */
     public boolean verifyUserCredentials(String username, String rawPassword) {
-        User user = userRepository.findByUsername(username);
+    	Usuario user = userRepository.findByUsername(username);
         if (user != null) {
             // Compara la contraseña ingresada con la encriptada almacenada
             return passwordEncoder.matches(rawPassword, user.getPassword());
@@ -73,7 +73,7 @@ public class UserService implements UserDetailsService {
      */
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User user = userRepository.findByUsername(username);
+		Usuario user = userRepository.findByUsername(username);
         if (user == null) {
             throw new UsernameNotFoundException("Usuario no encontrado: " + username);
         }
