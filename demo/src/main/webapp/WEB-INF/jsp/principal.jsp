@@ -46,27 +46,40 @@
        });
 
        // Enviar los datos editados al controlador vía AJAX
-       $(document).on("click", "#saveChanges", function () {
-       	console.log("Botón clickeado.");
-           const formData = $("#editForm").serialize(); // Serializar los datos del formulario
+      // Manejar clic en el botón "Guardar Cambios"
+		$(document).on("click", "#saveChanges", function () {
+		    enviarFormulario();
+		});
 
-           $.ajax({
-               url: "/usuario/updateUsuario", // URL del controlador (ControladorUsuario)
-               type: "POST",
-               data: formData,
-               success: function (response) {
-                   alert("Usuario actualizado correctamente.");
-                   location.reload(); // Opcional: recargar la página para ver los cambios
-               },
-               error: function (error) {
-                   alert("Error al actualizar el usuario.");
-                   console.error(error);
-               }
-           });
+	// Manejar tecla Enter en los campos del formulario
+	$(document).on("keydown", "#editForm input", function (event) {
+	    if (event.key === "Enter") {
+	        event.preventDefault(); // Evitar envío tradicional del formulario
+	        enviarFormulario();
+	    }
+	});
 
-           // Cierra el modal después de enviar los datos
-           $("#detalleModal").modal("hide");
-       });
+	// Función común para enviar el formulario
+	function enviarFormulario() {
+	    console.log("Enviando formulario...");
+	    const formData = $("#editForm").serialize();
+	
+	    $.ajax({
+	        url: "/usuario/updateUsuario",
+	        type: "POST",
+	        data: formData,
+	        success: function (response) {
+	            alert("Usuario actualizado correctamente.");
+	            location.reload();
+	        },
+	        error: function (error) {
+	            alert("Error al actualizar el usuario.");
+	            console.error(error);
+	        }
+	    });
+
+    $("#detalleModal").modal("hide");
+}
        
     // Filtrar la tabla en vivo
     document.addEventListener("DOMContentLoaded", function () {
