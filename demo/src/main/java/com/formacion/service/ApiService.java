@@ -35,6 +35,15 @@ public class ApiService {
 		this.webClient = webClient;
 	}
 
+	public String getApiData() {
+		String url = "https://dummyjson.com/users"; // URL de la API
+		String response = webClient.get().uri(url).retrieve().bodyToMono(String.class) // Recibe como texto
+				.block();
+		log.info(response);
+		return response;
+	}
+	
+
 	public List<User> getApiDataList() {
 		String url = "https://dummyjson.com/users"; // URL de la API
 		String response = webClient.get().uri(url).retrieve().bodyToMono(String.class) // Recibe como texto
